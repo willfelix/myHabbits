@@ -31,16 +31,28 @@ $(function() {
 	});
 
 	/**
-	*	DIALOG
+	*	Scheduler
 	*/
 	const scheduler = new Scheduler();
-	$('td').click(function (evt) {
-		let $tr = $(this).parent();
-		let day = scheduler.week[ $tr.find("td").index(this) ];
+	scheduler.loadSchedules();
+
+	$('td').click( (evt) => {
+		if (evt.target !== evt.currentTarget) return;
+
+		let $tr = $(evt.target).parent();
+		let day = scheduler.utils.weekdayByIndex( $tr.find("td").index(evt.target) );
 		let hour = $tr.find(".hour").text();
 
-		scheduler.write(day, hour);
-		scheduler.showDialog(evt);
+		scheduler.dialog.write({day, hour});
+		scheduler.dialog.show(evt);
+	});
+
+	$('table').on('click', 'td div', (evt) => {
+		scheduler.show(evt);
+	});
+
+	$('.remove-schedule').click( (evt) => {
+		scheduler.remove(evt);
 	});
 });
 
@@ -48,8 +60,13 @@ const Scheduler = function () {
 	const $schedule = $("#schedule");
 	const $reminder = $("#reminder");
 	const week = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+	const dao = new DAO();
 	const dialog = new mdc.dialog.MDCDialog(document.querySelector('#my-mdc-dialog'));
+	const dialogForShow = new mdc.dialog.MDCDialog(document.querySelector('#my-mdc-dialog-show'));
 
+	/*
+	*	Dialog
+	*/
 	dialog.listen('MDCDialog:accept', () => {
 		console.info("accept");
 		save();
@@ -57,47 +74,116 @@ const Scheduler = function () {
 
 	dialog.listen('MDCDialog:cancel', () => {
 		console.info("cancel");
-		clear();
+		clearDialog();
 	});
 
-	let all = () => {};
+	let clearDialog = () => {
+		writeDialog({});
+		$schedule.html("");
+	};
 
-	let show = () => {};
+	let writeDialog = (params, dialog) => {
+		if (dialog) {
+			$("#show-dialog-title").html(params.reminder);
+			$("#show-dialog-day").html(`
+				<i class="material-icons">event</i>&nbsp;&nbsp;${params.day}
+			`);
+			$("#show-dialog-hour").html(`
+				<i class="material-icons">hourglass_empty</i>&nbsp;&nbsp;${params.hour}
+			`);
+
+			return;
+		}
+
+		$schedule.html(`${params.day} - ${params.hour}`);
+		$schedule.data("day", params.day);
+		$schedule.data("hour", params.hour);
+
+		$reminder.val(params.reminder);
+		$reminder.focus();
+	};
+
+	let showDialog = (evt, modal = dialog) => {
+		modal.lastFocusedTarget = evt.target;
+		modal.show();
+	};
+
+	/*
+	*	Schedule
+	*/
+	let loadSchedules = () => {
+		let all = dao.all();
+	};
+
+	let show = (evt) => {
+		let $el = $(evt.target);
+		let day = $el.data("day");
+		let hour = $el.data("hour");
+		let reminder = $el.html();
+
+		writeDialog({day, hour, reminder}, dialogForShow);
+		showDialog(evt, dialogForShow);
+	};
+
+	let remove = (evt) => {
+		let $el = $(dialogForShow.lastFocusedTarget);
+		let id = $el.data("id");
+		dao.remove(id);
+
+		$el.fadeOut( () => $el.remove() );
+	};
 
 	let save = () => {
-		alert($reminder.val());
-		alert($schedule.html());
+		let reminder = $reminder.val();
+		let day = $schedule.data("day");
+		let hour = $schedule.data("hour");
+		let timestamp = Date.now();
 
-		clear();
+		dao.save({ reminder, day, hour }, (id) => {
+			$(dialog.lastFocusedTarget).find(`div[data-id=${timestamp}]`).data("id", id);
+		});
+
+		$(dialog.lastFocusedTarget).append(
+			`<div data-id="${timestamp}" data-day="${day}" data-hour="${hour}">${reminder}</div>`
+		);
+
+		clearDialog();
 	};
 
-	let clear = () => {
-		$schedule.html("");
-		$schedule.data("day", "");
-		$schedule.data("hour", "");
-
-		$reminder.val("");
-	};
-
-	let write = (day, hour) => {
-		$schedule.html(`${day} - ${hour}`);
-		$schedule.data("day", day);
-		$schedule.data("hour", hour);
-	};
-
-	let showDialog = (evt) => {
-		dialog.lastFocusedTarget = evt.target;
-		dialog.show();
-	};
+	/*
+	* Utils
+	*/
+	let weekdayByIndex = (index) => week[index];
 
 	return {
-		week,
-		all,
+		loadSchedules,
 		show,
+		remove,
 		save,
-		clear,
-		write,
-		showDialog
+		dialog: {
+			clear: clearDialog,
+			write: writeDialog,
+			show: showDialog
+		},
+		utils: {
+			weekdayByIndex
+		}
 	};
 
+};
+
+const DAO = function() {
+	return {
+		all: function() {
+
+		},
+
+		remove: function(id) {
+
+		},
+
+		save: function(params, callback) {
+
+		}
+	};
 };
