@@ -7,9 +7,8 @@ $(function() {
 	/**
 	*	DRAWER
 	*/
-	var drawerEl = document.querySelector('.mdc-drawer');
-	var MDCTemporaryDrawer = mdc.drawer.MDCTemporaryDrawer;
-	var drawer = new MDCTemporaryDrawer(drawerEl);
+	const drawerEl = document.querySelector('.mdc-drawer');
+	const drawer = new mdc.drawer.MDCTemporaryDrawer(drawerEl);
 	document.querySelector('.menu').addEventListener('click', function() {
 		drawer.open = true;
 	});
@@ -21,7 +20,7 @@ $(function() {
 	});
 
 	// Demonstrate application of --activated modifier to drawer menu items
-	var activatedClass = 'mdc-list-item--selected';
+	const activatedClass = 'mdc-list-item--selected';
 	document.querySelector('.mdc-drawer__drawer').addEventListener('click', function(event) {
 		var el = event.target;
 		while (el && !el.classList.contains('mdc-list-item')) {
@@ -39,30 +38,63 @@ $(function() {
 	/**
 	*	DIALOG
 	*/
-	var dialog = new mdc.dialog.MDCDialog(document.querySelector('#my-mdc-dialog'));
+	const dialog = new mdc.dialog.MDCDialog(document.querySelector('#my-mdc-dialog'));
+	const scheduler = new Scheduler();
 
 	dialog.listen('MDCDialog:accept', function() {
-		console.log('accepted');
+		scheduler.save();
 	});
 
 	dialog.listen('MDCDialog:cancel', function() {
-		console.log('canceled');
+		scheduler.clear();
 	});
 
 	$('td').click(function (evt) {
-		var $tr = $(this).parent();
-		var index = $tr.find("td").index(this);
-		var day = dayByIndex(index);
-		var hour = $tr.find(".hour").text();
+		let $tr = $(this).parent();
+		let day = scheduler.week[ $tr.find("td").index(this) ];
+		let hour = $tr.find(".hour").text();
 
-		$("#selected-hour").html(`${day} - ${hour}`);
+		scheduler.$schedule.html(`${day} - ${hour}`);
+		scheduler.$schedule.data("day", day);
+		scheduler.$schedule.data("hour", hour);
 
 		dialog.lastFocusedTarget = evt.target;
 		dialog.show();
 	});
-
-	function dayByIndex(index) {
-		var week = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
-		return week[index];
-	}
 });
+
+const Scheduler = function () {
+	const $schedule = $("#schedule");
+	const $reminder = $("#reminder");
+	const week = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+
+	return {
+		$schedule,
+		$reminder,
+		week,
+
+		all: function() {
+
+		},
+
+		show: function() {
+
+		},
+
+		save: function() {
+			alert(this.$reminder.val());
+			alert(this.$schedule.html());
+
+			this.clear();
+		},
+
+		clear: function() {
+			this.$schedule.html("");
+			this.$schedule.data("day", "");
+			this.$schedule.data("hour", "");
+
+			this.$reminder.val("");
+		}
+	};
+
+};
