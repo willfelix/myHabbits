@@ -7,4 +7,6 @@ Rails.application.routes.draw do
 	post 'schedules' => 'schedules#create'
 	delete 'schedule/:id' => 'schedules#destroy', :as => :schedule
 
+	get 'habits' => 'habits#index'
+	
 end

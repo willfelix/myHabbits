@@ -1,38 +1,22 @@
 <aside class="mdc-drawer mdc-drawer--temporary demo-drawer">
 	<nav class="mdc-drawer__drawer">
 		<header class="mdc-drawer__header">
-			<div class="mdc-drawer__header-content mdc-theme--text-primary-on-primary mdc-theme--primary-bg">
+			<div id="drawer-header" class="mdc-drawer__header-content mdc-theme--text-primary-on-primary mdc-theme--primary-bg">
 				MyHabbits
 			</div>
 		</header>
+
 		<nav class="mdc-drawer__content mdc-list-group">
 			<div id="icon-with-text-demo" class="mdc-list">
-				<a class="mdc-list-item mdc-list-item--selected demo-drawer-list-item" href="#">
-					<i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i>Inbox
-				</a>
-				<a class="mdc-list-item demo-drawer-list-item" href="#">
-					<i class="material-icons mdc-list-item__graphic" aria-hidden="true">star</i>Star
-				</a>
-				<a class="mdc-list-item demo-drawer-list-item" href="#">
-					<i class="material-icons mdc-list-item__graphic" aria-hidden="true">send</i>Sent Mail
-				</a>
-				<a class="mdc-list-item demo-drawer-list-item" href="#">
-					<i class="material-icons mdc-list-item__graphic" aria-hidden="true">drafts</i>Drafts
-				</a>
-			</div>
+				<%= link_to root_path, class: "mdc-list-item #{is_current_menu_active?('home')}" do %>
+					<i class="material-icons mdc-list-item__graphic" aria-hidden="true">event</i>Calendar
+				<% end %>
 
-			<hr class="mdc-list-divider">
+				<%= link_to habits_path, class: "mdc-list-item #{is_current_menu_active?('habits')}" do %>
+					<i class="material-icons mdc-list-item__graphic" aria-hidden="true">list</i>Habits
+				<% end %>
 
-			<div class="mdc-list">
-				<a class="mdc-list-item demo-drawer-list-item" href="#">
-					<i class="material-icons mdc-list-item__graphic" aria-hidden="true">email</i>All Mail
-				</a>
-				<a class="mdc-list-item demo-drawer-list-item" href="#">
-					<i class="material-icons mdc-list-item__graphic" aria-hidden="true">delete</i>Trash
-				</a>
-				<a class="mdc-list-item demo-drawer-list-item" href="#">
-					<i class="material-icons mdc-list-item__graphic" aria-hidden="true">report</i>Spam
-				</a>
+				<!-- <hr class="mdc-list-divider"> -->
 			</div>
 		</nav>
 	</nav>

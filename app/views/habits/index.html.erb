@@ -1,0 +1,23 @@
+<div class="mdc-list-group">
+	<% @days.each do |d| %>
+
+		<% unless d.habbits.blank? %>
+			<h3 class="mdc-list-group__header"><%= d.name %></h3>
+			<hr>
+			<ul class="mdc-list mdc-list--two-line">
+
+				<% d.habbits.each do |h| %>
+					<li class="mdc-list-item">
+						<span class="mdc-list-item__text">
+							<%= h.title %>
+							<span class="mdc-list-item__secondary-text"><%= h.hour.hour %></span>
+						</span>
+					</li>
+
+				<% end %>
+
+			</ul>
+		<% end %>
+
+	<% end %>
+</div>
