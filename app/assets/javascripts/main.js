@@ -34,8 +34,6 @@ $(function() {
 	*	Scheduler
 	*/
 	const scheduler = new Scheduler();
-	scheduler.loadSchedules();
-
 	$('td').click( (evt) => {
 		if (evt.target !== evt.currentTarget) return;
 
@@ -111,10 +109,6 @@ const Scheduler = function () {
 	/*
 	*	Schedule
 	*/
-	let loadSchedules = () => {
-		let all = dao.all();
-	};
-
 	let show = (evt) => {
 		let $el = $(evt.target);
 		let day = $el.data("day");
@@ -156,7 +150,6 @@ const Scheduler = function () {
 	let weekdayByIndex = (index) => week[index];
 
 	return {
-		loadSchedules,
 		show,
 		remove,
 		save,
@@ -174,16 +167,18 @@ const Scheduler = function () {
 
 const DAO = function() {
 	return {
-		all: function() {
-
+		all: function(callback) {
+			$.get("/schedules", (data) => {
+				callback(data);
+			});
 		},
 
 		remove: function(id) {
-
+			$.post(`/schedule/${id}`, { "_method": "delete" });
 		},
 
 		save: function(params, callback) {
-
+			$.post(`/schedules`, params, callback);
 		}
 	};
 };

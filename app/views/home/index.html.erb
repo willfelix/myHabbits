@@ -9,180 +9,30 @@
 		<thead class="thead-dark">
 			<tr>
 				<th width="5%" scope="col">#</th>
-				<th scope="col">Dom</th>
-				<th scope="col">Seg</th>
-				<th scope="col">Ter</th>
-				<th scope="col">Qua</th>
-				<th scope="col">Qui</th>
-				<th scope="col">Sex</th>
-				<th scope="col">Sab</th>
+				<% @days.each do |d| %>
+					<th scope="col"><%= d.name %></th>
+				<% end %>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<th class="hour">07:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">08:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">09:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">10:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">11:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">12:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">13:00</th>
-				<td></td>
-				<td></td>
-				<td>
-					<div data-day="Ter" data-hour="13:00">CrossFit</div>
-					<div>TCC</div>
-					<div>CERS</div>
-				</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">14:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">15:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">16:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">17:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">18:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">19:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">20:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>21:00</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<th class="hour">22:00</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
+
+			<% @hours.each do |h| %>
+				<tr>
+					<th class="hour"><%= h.hour %></th>
+					<% @days.each do |d| %>
+						<td>
+
+							<% d.habbits_by_hour(h).each do |habbit| %>
+								<div data-id="<%= habbit.id %>" data-day="<%= d.name %>" data-hour="<%= h.hour %>">
+									<%= habbit.title %>
+								</div>
+							<% end %>
+
+						</td>
+					<% end %>
+				</tr>
+			<% end %>
+
 		</tbody>
 	</table>
 
